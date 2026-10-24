@@ -16,11 +16,17 @@ PKG_FLAGS:=nonshared
 
 include $(INCLUDE_DIR)/package.mk
 
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	$(if $(wildcard ./files/*),$(CP) ./files/* $(PKG_BUILD_DIR)/)
+endef
+
 define Build/Compile
 endef
 
 ALLATH12KFIRMWARES := \
-	tplink_archer-be800
+	tplink_archer-be800 \
+	tplink_archer-ge800
 
 ALLATH12KFIRMWAREPACKAGES:=$(foreach BOARD,$(ALLATH12KFIRMWARES),ath12k-firmware-$(BOARD))
 
@@ -98,5 +104,6 @@ endef
 #   firmware-<devicename>.<qca4019|qca9888|qca9889|qca9984|qca99x0|ipq6018|ipq8074>
 
 $(eval $(call generate-ath12k-firmware-package,tplink_archer-be800,TP-Link Archer BE800))
+$(eval $(call generate-ath12k-firmware-package,tplink_archer-ge800,TP-Link Archer GE800))
 
 $(foreach PACKAGE,$(ALLATH12KFIRMWAREPACKAGES),$(eval $(call BuildPackage,$(PACKAGE))))
